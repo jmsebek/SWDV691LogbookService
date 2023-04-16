@@ -1,0 +1,50 @@
+{% extends 'userbase.html' %}
+
+{% block title %}Flight Detail{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+  <p class="right-align">Hi, {{ user.username }}!</p>
+  <h1>Flight Detail</h1>
+  <div class="row userhome">
+    <div class="col-lg d-flex">
+      <div class="content flex-fill">
+          <p>Date: {{flight.flight_date}}</p>
+          <p>Origin: {{flight.origin}}</p>
+          <p>Dest: {{flight.destination}}</p>
+          <p>Tail: {{flight.tail_number}}</p>
+          <p>Total: {{flight.total_time}}</p>
+          <p>Landings: {{flight.landings}}</p>
+          <p>Multi: {{flight.multi_engine_time}}</p>
+          <p>Single: {{flight.single_engine_time}}</p>
+          <p>VFR: {{flight.vfr_time}}</p>
+          <p>IFR: {{flight.ifr_time}}</p>
+          <p>Night: {{flight.night_time}}</p>
+          <p>Notes: {{flight.notes}}</p>
+        
+        
+            <p><a href = "{% url 'summary' %}">Return to Flight Summary</a></p>
+            <p><a href = "{% url 'flightdelete' flight.id %}" class="warning">Delete Flight</a></p>
+        </div>
+    </div>
+    <div class="col-lg d-flex">
+        <div class="content flex-fill">
+        <h3>Update flight detail:</h3>
+            <form action="." method="POST">
+            {% csrf_token %}
+            {{form.as_p}}
+            <input type="submit" value="Update"/>
+            </form>   
+        </div> 
+    </div>
+  </div>
+
+
+{% else %}
+<div id="login-needed">
+<p>You are not logged in.</p>
+<p>Please <a href="{% url 'login' %}">Log In</a> or <a href="{% url 'signup' %}">Sign Up</a> to enter flight data.</p>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'userbase.html' %}
+{% block title %}Reports{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+  <p class="right-align">Hi, {{ user.username }}!</p>
+  <h1>Reports</h1>
+  <div class="container">
+    <div class="row userhome">
+      <div class="col-md-4 d-flex">
+        <div class="content flex-fill">
+          <h3>Select Report Type:</h3>
+          <span class="form-check">
+            <form method="post">
+              {% csrf_token %}
+              {{ form.as_p }}
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </span>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="content" id="report-results" style="min-height: 400px;">
+          
+        
+        </div>
+      </div>
+    </div>
+  </div>
+{% else %}
+  <div id="login-needed">
+    <p>You are not logged in.</p>
+    <p>Please <a href="{% url 'login' %}">Log In</a> or <a href="{% url 'signup' %}">Sign Up</a> to view reports.</p>
+  </div>
+  
+{% endif %}
+{% endblock %}

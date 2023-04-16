@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@500&display=swap');
+
+.row {
+    background-color: #d7d9cf;
+}
+
+.login-form {
+    height: 400px;
+}
+
+.container {
+    border: 1px solid;
+    border-radius: 5px;
+}
+
+#reports {
+    min-height: 400px;
+}
+
+.danger {
+    background-color: #fa5347;
+    font-weight: bold;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.success {
+    background-color: #339900;
+    font-weight: bold;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.warning {
+    background-color: #f7f76b;
+    font-weight: bold;
+    color: black;
+    padding: 10px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+#login-needed {
+    margin: auto;
+    border: 1px solid;
+    border-radius: 5px;
+    width: 75%;
+    padding: 1%;
+    margin-top: 20px;
+}
+
+.login-container {
+    border: 1px solid;
+    padding: 2%;
+    margin: 1%;
+    background-color: white;
+    height: 95%;
+    border-radius: 5px;
+}
+
+.userhome {
+    justify-content: space-between;
+    padding: 1%;
+    background-color: #d0dbe2;
+    border-radius: 5px;
+}
+
+.content {
+    background-color: white;
+    padding: 1%;
+    border-radius: 5px;
+}
+
+.btn {
+    background-color: #61879e;
+    border: 1px solid #d7d9cf;
+    border-radius: 5px;
+    padding: 10px;
+    color: white;
+    margin-bottom: 5px;
+}
+
+
+.image-content {
+    padding: 1%;
+}
+
+
+.fieldWrapper {
+    display: inline-block;
+    padding-right: 10px;
+}
+
+*{
+    font-family: "Comfortaa", Helvetica, Arial, "sans-serif";
+}
+
+h1 {
+    text-align: center;
+    margin: 1%;
+    color: #3d5a80
+}
+
+footer {
+    position: relative;
+    color: white;
+    text-align: center;
+    height: 75px;
+    width: 100%;
+    bottom: 0px;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+.right-align {
+    text-align: right;
+    margin-right: 10px;
+}
+
+.form-check {
+    display: flex;
+}
+
+.form-check-input {
+    display: inline-block; 
+    width: 20px;
+    height: 20px;
+    padding: 3px;
+    border: 2px solid #3d5a80;
+    border-radius: 50%;
+}
+
+.form-check-input:checked {
+    background-color: #61879e;
+}
+

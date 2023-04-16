@@ -1,0 +1,95 @@
+{% extends 'userbase.html' %}
+
+{% block title %}Summary{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+  <p class="right-align">Hi, {{ user.username }}!</p>
+  <h1>Summary</h1>
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li class="{{message.tags}}">{{message}}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  <div class="container">
+    <div class="row userhome">
+        <div class="col-md">
+          <div class="content">
+            <p>Total Time: {{ total_time }}</p>
+          </div>
+        </div>
+        <div class="col-md">
+          <div class="content">
+            <p>Night: {{ night_time }}</p>
+          </div>
+        </div>
+        <div class="col-md">
+          <div class="content">
+            <p>VFR: {{ vfr_time }}</p>
+          </div>
+        </div>
+        <div class="col-md">
+          <div class="content">
+            <p>IFR: {{ ifr_time }}</p>
+          </div>
+        </div>
+        <div class="col-md">
+          <div class="content">
+            <p>Multi: {{ multi_time }}</p>
+          </div>
+        </div>
+        <div class="col-md">
+          <div class="content">
+            <p>Single: {{ single_time }}</p>
+          </div>
+        </div>
+        <div class="col-md">
+          <div class="content">
+            <p>PIC: {{ pic_time }}</p>
+          </div>
+        </div>
+        <div class="col-md">
+          <div class="content">
+            <p>SIC: {{ sic_time }}</p>
+          </div>
+        </div>
+    </div>
+    <div class="row userhome">
+      <h3>Click on flight date to view detail or update flight information.</h3>
+      <div class="content">
+        <div class="container">
+          
+          {% for flight in data %}
+          <div class="row">
+            <div class="col-lg"><a href ="{% url 'flightdetail' flight.id %}">Date: {{flight.flight_date}}</a> </div>
+            <div class="col-lg">Origin: {{flight.origin}}</div>
+            <div class="col-lg">Dest: {{flight.destination}}</div>
+            <div class="col-lg">Tail: {{flight.tail_number}}</div>
+            <div class="col-lg">Total: {{flight.total_time}}</div>
+            <div class="col-lg">Landings: {{flight.landings}}</div>
+            <div class="col-lg">Multi: {{flight.multi_engine_time}}</div>
+            <div class="col-lg">Single: {{flight.single_engine_time}}</div>
+            <div class="col-lg">VFR: {{flight.vfr_time}}</div>
+            <div class="col-lg">IFR: {{flight.ifr_time}}</div>
+            <div class="col-lg">Night: {{flight.night_time}}</div>
+            <div class="col-lg">Notes: {{flight.notes}}</div>
+            <hr>
+          </div>
+          {% empty %}
+          <p>No flights have been entered yet.</p>
+          {% endfor %}
+          
+        </div>
+      </div>
+    </div>
+  
+{% else %}
+<div id="login-needed">
+  <p>You are not logged in.</p>
+  <p>Please <a href="{% url 'login' %}">Log In</a> or <a href="{% url 'signup' %}">Sign Up</a> to view logbook summary.</p>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends 'userbase.html' %}
+{% block title %}Pilot Medical{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+  <p class="right-align">Hi, {{ user.username }}!</p>
+  <h1>Pilot Medical</h1>
+  <div class="container">
+    <div class="row userhome">
+      <div class="col-lg d-flex">
+        <div class="content flex-fill">
+        <h3>Current FAA Medical:</h3>
+        {% if data != None %}
+          <p>Date: {{data.medical_date}}</p>
+          <p>Class: {{data.medical_class}}</p>
+          <p>Examiner: {{data.examiner_name}}</p>
+          <p>Examiner Phone: {{data.examiner_phone}}</p>
+          <p>Notes: {{data.notes}}</p>
+          {% if medical_due != None %}
+          <h3>Next Medical Due:</h3>
+          <p>Your current medical expires on: {{medical_due}}</p>
+          {% endif %}
+          <h3>Medical History</h3>
+          {% for medical in history %}
+            <p>Date: {{medical.medical_date}}   Class: {{medical.medical_class}}</p>
+          {% endfor %}
+        {% else %}
+          <p>Currently no medical data entered.</p>
+        {% endif %}
+        
+        
+        </div>
+      </div>
+      <div class="col-lg d-flex">
+        <div class="content flex-fill">
+          <h3>Add a new medical:</h3>
+          <form action="." method="POST">
+            {% csrf_token %}
+            {{form.as_p}}
+            <input type="submit" value="Save"/>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+{% else %}
+  
+  <div id="login-needed">
+    <p>You are not logged in.</p>
+    <p>Please <a href="{% url 'login' %}">Log In</a> or <a href="{% url 'signup' %}">Sign Up</a> to view medical detail.</p>
+  </div>
+  
+{% endif %}
+{% endblock %}

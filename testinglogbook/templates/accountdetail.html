@@ -1,0 +1,81 @@
+{% extends 'userbase.html' %}
+
+{% block title %}Account Detail{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+<p class="right-align">Hi, {{ user.username }}!</p>
+<h1>Account Detail</h1>
+<div class="container">
+  <div class="row userhome">
+    <div class="col-lg d-flex">
+      <div class="content flex-fill">
+      <h3>Your account:</h3>
+      {% for account in account_detail_data %}
+        <p>Name: {{account.first_name}} {{account.last_name}}</p>
+        <p>Age: {{account.age}}</p>
+        <p>Current Flying Type: Part {{account.faa_part_type}}</p>
+        <p>Current Aircraft Type: {{account.current_aircraft_type}}</p>
+        <p>PIC/SIC: 
+          {% if account.pilot_in_command == True %}
+            PIC
+          {% else %}
+            SIC
+          {% endif %}
+          </p>
+      {% empty %}
+        <p>Currently no account detail data entered.</p>
+      {% endfor %}
+      <h3>Certificates:</h3>
+        <form action="{% url 'certificatesheld' %}" method="POST">
+          {% csrf_token %}
+          {% for field in certificates_form %}
+            <div class="fieldWrapper">
+              {{field.label_tag}} {{field}}
+            </div>
+          {% endfor %}
+          <br>
+          <input type="submit" class="btn" value="Update"/>
+        </form>
+        <br>
+      <h3>Ratings</h3>
+        <form action="{% url 'ratingsheld' %}" method="POST">
+          {% csrf_token %}
+          {% for field in ratings_form %}
+            <div class="fieldWrapper">
+              {{field.label_tag}} {{field}}
+            </div>
+          {% endfor %}
+          <br>
+          <input type="submit" class="btn" value="Update"/>
+        </form>
+      </div>
+    </div>
+    <div class="col-lg d-flex">
+      <div class="content flex-fill">
+        {% if account_detail_data  %}
+        <h3>Update account detail:</h3>
+        {% else %}
+        <h3>Add account detail:</h3>
+        {% endif %}
+        <form action="." method="POST">
+          {% csrf_token %}
+          {{form.as_p}}
+          <input type="submit" class="btn" value="Save"/>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+  
+{% else %}
+<div id="login-needed">
+  <p>You are not logged in.</p>
+  <p>Please <a href="{% url 'login' %}">Log In</a> or <a href="{% url 'signup' %}">Sign Up</a> to view account detail.</p>
+</div>
+  
+  
+{% endif %}
+{% endblock %}

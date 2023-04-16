@@ -1,0 +1,77 @@
+{% extends 'userbase.html' %}
+{% load static %}
+
+{% block title %}User Home Page{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+  <p class="right-align">Hi, {{ user.username }}!</p>
+  <h1>Pilot Logbook Manager</h1>
+  
+  
+  
+  <div class="container">
+    <div class="row userhome">
+      <div class="col-lg d-flex">
+        <div class="card card-body flex-fill">
+          <img src="{% static 'logbookpage.jpg' %}" class="card-img-top" alt="closeup of pilot logbook page">
+          <div class="card-body">
+            <h5 class="card-title">Flight Entry</h5>
+            <p class="card-text">Create logbook entries by adding your flight details here.</p>
+            <a href="{% url 'flightentry' %}" class="btn btn-primary">Flight Entry</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg d-flex">  
+        <div class="card card-body flex-fill">
+          <img src="{% static 'logbookclose.jpg' %}" class="card-img-top" alt="picture of pilot logbook">
+          <div class="card-body">
+            <h5 class="card-title">Summary</h5>
+            <p class="card-text">View a list of your flights and a summary of your total time.</p>
+            <a href="{% url 'summary' %}" class="btn btn-primary">Summary</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg d-flex">
+        <div class="card card-body flex-fill">
+          <img src="{% static 'report.png' %}" class="card-img-top" alt="image of bar graph">
+          <div class="card-body">
+            <h5 class="card-title">Reports</h5>
+            <p class="card-text">View reports of your time by category and progress.</p>
+            <a href="{% url 'reports' %}" class="btn btn-primary">Reports</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg d-flex">
+        <div class="card card-body flex-fill">
+          <img src="{% static 'medicalcert.jpg' %}" class="card-img-top" alt="image of pilot medical certificate">
+          <div class="card-body">
+            <h5 class="card-title">Medical</h5>
+            <p class="card-text">Enter your FAA medical certificate information and view reminders.</p>
+            <a href="{% url 'medical' %}" class="btn btn-primary">Medical</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg d-flex">
+        <div class="card card-body flex-fill">
+          <img src="{% static 'accountdet.png' %}" class="card-img-top" alt="account details icon">
+          <div class="card-body">
+            <h5 class="card-title">Account</h5>
+            <p class="card-text">Add personal information here to make flight entry faster.</p>
+            <a href="{% url 'accountdetail' %}" class="btn btn-primary">Account</a>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+   
+    </div>
+  </div>
+{% else %}
+<div id="login-needed">
+  <p>You are not logged in.</p>
+  <p>Please <a href="{% url 'login' %}">Log In</a> or <a href="{% url 'signup' %}">Sign Up</a> to begin.</p>
+</div>
+{% endif %}
+{% endblock %}

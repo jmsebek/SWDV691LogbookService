@@ -1,0 +1,34 @@
+{% extends 'userbase.html' %}
+
+{% block title %}Flight Delete{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+  <p class="right-align">Hi, {{ user.username }}!</p>
+  <h1>Delete Flight</h1>
+  <div class="row userhome">
+    <div class="col-lg d-flex">
+      <div class="content flex-fill">
+        <p class="danger">Please confirm flight delete:</p>
+        <p>Date: {{flight.flight_date}}</p>
+        <p>Origin: {{flight.origin}}</p>
+        <p>Dest: {{flight.destination}}</p>
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Delete">
+        </form>
+    
+    
+        <p><a href = "{% url 'summary' %}">Cancel and return to Flight Summary</a></p>
+        </div>
+    </div>
+  </div>
+
+
+{% else %}
+<div id="login-needed">
+<p>You are not logged in.</p>
+<p>Please <a href="{% url 'login' %}">Log In</a> or <a href="{% url 'signup' %}">Sign Up</a> to enter flight data.</p>
+</div>
+{% endif %}
+{% endblock %}

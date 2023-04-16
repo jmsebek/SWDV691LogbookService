@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+  <p class="right-align">Hi, {{ user.username }}!</p>
+  <h1>Pilot Logbook Manager</h1> 
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4 content">
+        With Pilot Logbook Manager you can easily keep track of your flight time and other information related to your 
+        pilot records. Pilot Logbook Manager is suitable for both recreational and professional pilots. You can quickly enter
+        flight data, review it, and update it as needed. View a summary of your flights and total flight time from the logbook
+        summary page. Add your medical history, and Pilot Logbook Manager will help you keep track of when your next medical is due.
+        You can also use it to keep track of your current ratings and certificates. The reports feature allows you to see an overview
+        of your current flight time by category, or your progress toward earning your next certificate.
+      </div>
+      <div class="col-lg-8 content d-flex">
+        
+        <img src="{% static 'logbookclose.jpg' %}" class="img-fluid" alt="pilot logbook">
+      
+      </div>
+      
+    </div>
+   
+    </div>
+  </div>
+{% else %}
+  <h1>Pilot Logbook Manager</h1>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4 content">
+        <p>With Pilot Logbook Manager you can easily keep track of your flight time and other information related to your 
+          pilot records.</p>
+        <p>Pilot Logbook Manager is suitable for both recreational and professional pilots. You can quickly enter
+        flight data, review it, and update it as needed. View a summary of your flights and total flight time from the logbook
+        summary page. Add your medical history, and Pilot Logbook Manager will help you keep track of when your next medical is due.
+        You can also use it to keep track of your current ratings and certificates. The reports feature allows you to see an overview
+        of your current flight time by category, or your progress toward earning your next certificate.</p> 
+        <p><a href="{% url 'login' %}">Sign In</a> or <a href="{% url 'signup' %}">Sign Up</a> to get started.</p>
+      </div>
+      <div class="col-lg-8 image-content">
+        <img src="{% static 'logbookclose.jpg' %}" class="img-fluid" alt="pilot logbook">
+      </div>
+      
+      
+    </div>
+   
+    </div>
+  </div>
+{% endif %}
+
+
+{% endblock %}
