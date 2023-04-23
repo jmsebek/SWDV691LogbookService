@@ -2,7 +2,7 @@ from django import forms
 from .models import Flight, Medical, AccountDetail, CertificatesHeld, RatingsHeld
 
 class ReportForm(forms.Form):
-    report_choice = forms.ChoiceField(choices=(("totalTime", "Total Time"),("progress", "Progress")),widget=forms.RadioSelect(), required=True)
+    report_choice = forms.ChoiceField(choices=(("totalTime", "Total Time"),("progress_private", "Private Pilot Certificate Progress"),("progress_recreational", "Recreational Pilot Certificate Progress"),("progress_commercial", "Commercial Pilot Certificate Progress"),("progress_atp", "Air Transport Pilot Certificate Progress")),widget=forms.RadioSelect(), required=True)
     #report_choice.widget.attrs.update({'class':'form-check-input'})
 
 class DateInput(forms.DateInput):
@@ -65,7 +65,7 @@ class AccountDetailForm(forms.ModelForm):
     age = forms.IntegerField(min_value=0)
     pilot_in_command = forms.ChoiceField(choices=(("True", "PIC"),("False", "SIC")),widget=forms.RadioSelect(), required=True)
     current_aircraft_type = forms.ChoiceField(choices=(("multi", "Multi-Engine"),("single", "Single-Engine")),widget=forms.RadioSelect(), required=True)
-    faa_part_type = forms.ChoiceField(label="FAA Part Type", choices=(("135", "Part 135"),("121", "Part 121")),widget=forms.RadioSelect(), required=True)
+    faa_part_type = forms.ChoiceField(label="FAA Part Type", choices=(("135", "Part 135"),("121", "Part 121"),("91", "Part 91")),widget=forms.RadioSelect(), required=True)
 
     class Meta:
         model = AccountDetail

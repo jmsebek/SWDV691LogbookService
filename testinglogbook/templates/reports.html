@@ -23,7 +23,9 @@
       <div class="col-md-8">
         <div class="content" id="report-results" style="min-height: 400px;">
           
-        
+          <canvas id="chart" width="500"></canvas>
+
+          <canvas id="totalTimePie"></canvas>
         </div>
       </div>
     </div>
@@ -35,4 +37,100 @@
   </div>
   
 {% endif %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"></script>
+<script type="text/javascript">
+  let report_type = "{{report_type}}"
+  if (report_type != "None"){
+    if (report_type == "progress_private" || report_type == "progress_recreational" || report_type == "progress_commercial" || report_type == "progress_atp"){
+      let label_dict = JSON.parse("{{hours_required | escapejs}}");
+      let pilot_time_dict = JSON.parse("{{pilot_current_time | escapejs}}");
+      if (pilot_time_dict != null){
+        let report_labels = Object.keys(label_dict);
+        let report_values = Object.values(label_dict)
+        let report_title = "{{title}}";
+        let pilot_completed_time_values = Object.values(pilot_time_dict);
+      
+        let ctx = document.getElementById("chart").getContext("2d");
+
+        let chart = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: report_labels,
+            datasets: [
+                {
+                  label: "Current Time Completed",
+                  barThickness: 8,
+                  backgroundColor: "#79AEC8",
+                  borderColor: "#417690",
+                  data: pilot_completed_time_values,
+                  stack: 'Stack 0',
+                },
+                {
+                  label: "Total Time Needed",
+                  barThickness: 8,
+                  backgroundColor: "red",
+                  borderColor: "#417690",
+                  data: report_values,
+                  stack: 'Stack 1'
+                }
+            ]
+          },
+          options: {
+            plugins: {
+              title: {
+                text: report_title,
+                display: true
+              }
+            },
+            scales: {
+              x: {
+                stacked: true
+              },
+              y: {
+                stacked: true
+              }
+            },
+            indexAxis: "y",
+          }
+        });
+      }
+    } else {
+      let pilot_time_dict = JSON.parse("{{pilot_current_time | escapejs}}");
+      if (pilot_time_dict != null){
+        let report_labels = Object.keys(pilot_time_dict);
+        let report_values = Object.values(pilot_time_dict);
+        let report_title = "{{title}}";
+        let xValues = report_labels;
+        let yValues = report_values;
+        let barColors = ["red", "blue"];
+
+        let totalTimeCtx = document.getElementById("chart").getContext("2d");
+        let timeChart = new Chart (totalTimeCtx, {
+          type: "pie",
+          data: {
+            labels: xValues,
+            datasets: [{
+              backgroundColor: barColors,
+              data: yValues
+            }]
+          },
+          options: {
+            title: {
+              display: true,
+              text: report_title
+            },
+            layout: {
+              padding: {
+                left: 0,
+                right: 0,
+                top: 25,
+                bottom: 25
+              }
+            }
+          }
+        });
+      }
+}}
+</script>
 {% endblock %}

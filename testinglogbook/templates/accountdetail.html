@@ -12,21 +12,21 @@
     <div class="col-lg d-flex">
       <div class="content flex-fill">
       <h3>Your account:</h3>
-      {% for account in account_detail_data %}
-        <p>Name: {{account.first_name}} {{account.last_name}}</p>
-        <p>Age: {{account.age}}</p>
-        <p>Current Flying Type: Part {{account.faa_part_type}}</p>
-        <p>Current Aircraft Type: {{account.current_aircraft_type}}</p>
+      {% if account_detail_data %}
+        <p>Name: {{account_detail_data.first_name}} {{account_detail_data.last_name}}</p>
+        <p>Age: {{account_detail_data.age}}</p>
+        <p>Current Flying Type: Part {{account_detail_data.faa_part_type}}</p>
+        <p>Current Aircraft Type: {{account_detail_data.current_aircraft_type}}</p>
         <p>PIC/SIC: 
-          {% if account.pilot_in_command == True %}
+          {% if account_detail_data.pilot_in_command == True %}
             PIC
           {% else %}
             SIC
           {% endif %}
           </p>
-      {% empty %}
+      {% else %}
         <p>Currently no account detail data entered.</p>
-      {% endfor %}
+      {% endif %}
       <h3>Certificates:</h3>
         <form action="{% url 'certificatesheld' %}" method="POST">
           {% csrf_token %}
