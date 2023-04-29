@@ -64,7 +64,7 @@
           
           {% for flight in data %}
           <div class="row">
-            <div class="col-lg"><a href ="{% url 'flightdetail' flight.id %}">Date: {{flight.flight_date}}</a> </div>
+            <div class="col-lg"><a href ="{% url 'flightdetail' flight.id %}" class="link-dark">Date: {{flight.flight_date}}</a> </div>
             <div class="col-lg">Origin: {{flight.origin}}</div>
             <div class="col-lg">Dest: {{flight.destination}}</div>
             <div class="col-lg">Tail: {{flight.tail_number}}</div>

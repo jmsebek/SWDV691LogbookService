@@ -18,17 +18,33 @@
               <button type="submit" class="btn btn-primary">Submit</button>
             </form>
           </span>
+          
         </div>
+        
       </div>
       <div class="col-md-8">
         <div class="content" id="report-results" style="min-height: 400px;">
           
           <canvas id="chart" width="500"></canvas>
 
-          <canvas id="totalTimePie"></canvas>
+          
+          
+          <div id="percent_results" style="padding-left: 4%; color: #444444;">
+            {% if percent_complete != None %}
+              <hr>
+              <h5>Percent Completed:</h5>
+              
+              {% for key, value in percent_complete.items %}
+                <p>{{key}} : {{value}}%</p>
+              
+              {% endfor %}
+            {% endif %}
+          </div>
         </div>
+        
       </div>
     </div>
+    
   </div>
 {% else %}
   <div id="login-needed">
@@ -45,6 +61,7 @@
     if (report_type == "progress_private" || report_type == "progress_recreational" || report_type == "progress_commercial" || report_type == "progress_atp"){
       let label_dict = JSON.parse("{{hours_required | escapejs}}");
       let pilot_time_dict = JSON.parse("{{pilot_current_time | escapejs}}");
+      
       if (pilot_time_dict != null){
         let report_labels = Object.keys(label_dict);
         let report_values = Object.values(label_dict)
@@ -97,10 +114,13 @@
       }
     } else {
       let pilot_time_dict = JSON.parse("{{pilot_current_time | escapejs}}");
+      console.log(pilot_time_dict);
+      
       if (pilot_time_dict != null){
         let report_labels = Object.keys(pilot_time_dict);
         let report_values = Object.values(pilot_time_dict);
         let report_title = "{{title}}";
+        console.log(report_title);
         let xValues = report_labels;
         let yValues = report_values;
         let barColors = ["red", "blue"];

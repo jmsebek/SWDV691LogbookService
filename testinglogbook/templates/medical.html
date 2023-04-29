@@ -6,6 +6,13 @@
 {% if user.is_authenticated %}
   <p class="right-align">Hi, {{ user.username }}!</p>
   <h1>Pilot Medical</h1>
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li class="{{message.tags}}">{{message}}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
   <div class="container">
     <div class="row userhome">
       <div class="col-lg d-flex">
@@ -23,7 +30,7 @@
           {% endif %}
           <h3>Medical History</h3>
           {% for medical in history %}
-            <p>Date: {{medical.medical_date}}   Class: {{medical.medical_class}}</p>
+            <p><a href ="{% url 'medicaldetail' medical.id %}" class="link-dark">Date: {{medical.medical_date}}   Class: {{medical.medical_class}}</a></p>
           {% endfor %}
         {% else %}
           <p>Currently no medical data entered.</p>

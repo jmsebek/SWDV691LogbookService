@@ -8,8 +8,11 @@
   <p class="right-align">Hi, {{ user.username }}!</p>
   <h1>Pilot Logbook Manager</h1>
   
-  
-  
+  {% if message %}
+    <div class="success container">
+        <p>{{message}}</p>
+    </div>
+  {% endif %}
   <div class="container">
     <div class="row userhome">
       <div class="col-lg d-flex">

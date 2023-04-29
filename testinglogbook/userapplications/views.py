@@ -9,7 +9,16 @@ import json
 
 # Create your views here.
 def UserHomeView(request):
-    return render(request, 'userhome.html')
+    user = request.user
+    queryset = AccountDetail.objects.filter(pilot = user).first()
+    if queryset == None:
+        message = "Fill out your account details first to make logging flights quicker. Pilot Logbook Manager will automatically calculate times according to your information."
+    else:
+        message = ''
+    context = {
+        "message": message
+    }
+    return render(request, 'userhome.html', context)
 
 def FlightEntryView(request):
     if request.user.is_authenticated:
@@ -59,7 +68,10 @@ def FlightDetailView(request, id=None):
     flight = get_object_or_404(Flight,id=id)
     flight_update_form = FlightEntryForm(instance=flight)
     pilot_in_command = AccountDetail.objects.filter(pilot = user).values('pilot_in_command')
-
+    print(user.id)
+    print(flight.pilot.id)
+    if str(user.id) != str(flight.pilot.id):
+        return render(request, '403.html')
     if request.method == "POST":
         flight_update_form = FlightEntryForm(request.POST, instance=flight)
         if flight_update_form.is_valid():
@@ -80,8 +92,10 @@ def FlightDetailView(request, id=None):
     return render(request, 'flightdetail.html', context)
 
 def FlightDeleteView(request, id):
+    user = request.user
     flight = Flight.objects.get(id=id)
-
+    if str(user.id) != str(flight.pilot.id):
+        return render(request, '403.html')
     if request.method == 'POST':
         flight.delete()
         messages.success(request, "Flight successfully deleted")
@@ -91,6 +105,42 @@ def FlightDeleteView(request, id):
         "flight" : flight
     }
     return render(request, 'flightdelete.html', context)
+
+def MedicalDetailView(request, id=None):
+    user = request.user
+    medical = get_object_or_404(Medical,id=id)
+    medical_update_form = MedicalForm(instance=medical)
+    if str(user.id) != str(medical.pilot.id):
+        return render(request, '403.html')
+    if request.method == "POST":
+        medical_update_form = MedicalForm(request.POST, instance=medical)
+        if medical_update_form.is_valid():
+            obj = medical_update_form.save(commit=False)
+            obj.pilot = request.user
+            obj.save()
+            
+
+    context = {
+        "medical": medical,
+        "form": medical_update_form
+    }
+
+    return render(request, 'medicaldetail.html', context)
+
+def MedicalDeleteView(request, id):
+    user = request.user
+    medical = Medical.objects.get(id=id)
+    if str(user.id) != str(medical.pilot.id):
+        return render(request, '403.html')
+    if request.method == 'POST':
+        medical.delete()
+        messages.success(request, "Medical successfully deleted")
+        return redirect('medical')
+
+    context = {
+        "medical" : medical
+    }
+    return render(request, 'medicaldelete.html', context)
 
 def SummaryView(request):
         
@@ -270,29 +320,34 @@ def ReportsView(request):
     if request.method == "POST":
         report_type = request.POST.get("report_choice", None)
         if report_type == 'totalTime':
-            pilot_current_time, hours_required, title = createProgressReport(request, report_type)
+            pilot_current_time, hours_required, title, percent_complete = createProgressReport(request, report_type)
         if report_type == 'progress_private' or report_type == 'progress_recreational' or report_type == 'progress_commercial' or report_type == 'progress_atp':
-            pilot_current_time, hours_required, title = createProgressReport(request, report_type)        
+            pilot_current_time, hours_required, title, percent_complete = createProgressReport(request, report_type)        
         context = {
             'form': form,
             'pilot_current_time' : pilot_current_time,
             'hours_required' : hours_required,
             'title' : title,
-            'report_type': report_type
+            'report_type': report_type,
+            'percent_complete': percent_complete
         }
-        print(hours_required)
+        
     else:
         pilot_current_time = None
         hours_required = None
         title = None  
-        report_type = None  
+        report_type = None
+        percent_complete = None  
+        
     context={
         'form' : form,
         'pilot_current_time' : json.dumps(pilot_current_time),
             'hours_required' : json.dumps(hours_required),
+            'percent_complete' : percent_complete,
             'title' : title,
             'report_type': report_type
     }
+    print(context)
     return render(request, 'reports.html', context)
 
 def CalculateMedicalDue(queryset, pilot_age, flying_type):
@@ -345,6 +400,7 @@ def CalculateMedicalDue(queryset, pilot_age, flying_type):
     
 def createProgressReport(request, report_type):
     pilot_current_time = {}
+    percent_complete = {}
 
     if request.user.is_authenticated:    
         user = request.user
@@ -387,20 +443,37 @@ def createProgressReport(request, report_type):
             pilot_current_time['Night'] = night
             pilot_current_time['IFR'] = ifr_time
 
+
         if report_type == 'progress_recreational':
             title = 'Progress Toward Recreational Certificate'
             hours_required = {"Total": 30, "PIC": 3}
+            percent_complete["Total"] = round((totaltime / hours_required['Total'] * 100), 1)
+            percent_complete["PIC"] = round((pic_time / hours_required['PIC'] * 100), 1)
+
         elif report_type == 'progress_private':
             title = 'Progress Toward Private Pilot Certificate'
             hours_required = {"Total": 40, "PIC": 10, "Night": 3, "IFR": 3}
+            percent_complete["Total"] = round((totaltime / hours_required['Total'] * 100), 1)
+            percent_complete["PIC"] = round((pic_time / hours_required['PIC'] * 100), 1)
+            percent_complete['Night'] = round((night / hours_required['Night'] * 100), 1)
+            percent_complete['IFR'] = round((ifr_time / hours_required['IFR'] * 100), 1)
         elif report_type == 'progress_commercial':
             title = 'Progress Toward Commercial Pilot Certificate'
             hours_required = {"Total": 250, "PIC": 100, "Night": 5, "IFR":10}
+            percent_complete["Total"] = round((totaltime / hours_required['Total'] * 100), 1)
+            percent_complete["PIC"] = round((pic_time / hours_required['PIC'] * 100), 1)
+            percent_complete['Night'] = round((night / hours_required['Night'] * 100), 1)
+            percent_complete['IFR'] = round((ifr_time / hours_required['IFR'] * 100), 1)
         elif report_type == 'progress_atp':
             title = 'Progress Toward Air Transport Pilot Certificate'
             hours_required = {"Total":1500, "PIC": 250, "Night": 100, "IFR": 75}
+            percent_complete["Total"] = round((totaltime / hours_required['Total'] * 100), 1)
+            percent_complete["PIC"] = round((pic_time / hours_required['PIC'] * 100), 1)
+            percent_complete['Night'] = round((night / hours_required['Night'] * 100), 1)
+            percent_complete['IFR'] = round((ifr_time / hours_required['IFR'] * 100), 1)
         elif report_type == 'totalTime':
             title = 'Total Time by Category'
             hours_required = None
+            percent_complete = None
 
-    return pilot_current_time, hours_required, title
+    return pilot_current_time, hours_required, title, percent_complete

@@ -1,0 +1,43 @@
+{% extends 'userbase.html' %}
+
+{% block title %}Medical Exam Record Detail{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+  <p class="right-align">Hi, {{ user.username }}!</p>
+  <h1>Medical Exam Record Detail</h1>
+  <div class="row userhome">
+    <div class="col-lg d-flex">
+      <div class="content flex-fill">
+        <p>Date: {{medical.medical_date}}</p>
+        <p>Class: {{medical.medical_class}}</p>
+        <p>Examiner: {{medical.examiner_name}}</p>
+        <p>Examiner Phone: {{medical.examiner_phone}}</p>
+        <p>Notes: {{medical.notes}}</p>
+        
+        
+            <p><a href = "{% url 'medical' %}" class="link-dark">Return to Medical Exam Summary</a></p>
+            <p><a href = "{% url 'medicaldelete' medical.id %}" class="warning">Delete Medical Exam</a></p>
+        </div>
+    </div>
+    <div class="col-lg d-flex">
+        <div class="content flex-fill">
+        <h3>Update medical exam record detail:</h3>
+            <form action="." method="POST">
+            {% csrf_token %}
+            {{form.as_p}}
+            <input type="submit" value="Update"/>
+            </form>   
+        </div> 
+    </div>
+  </div>
+
+
+{% else %}
+<div id="login-needed">
+<p>You are not logged in.</p>
+<p>Please <a href="{% url 'login' %}">Log In</a> or <a href="{% url 'signup' %}">Sign Up</a> to enter flight data.</p>
+</div>
+{% endif %}
+{% endblock %}
