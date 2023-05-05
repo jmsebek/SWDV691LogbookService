@@ -1,0 +1,80 @@
+{% extends 'userbase.html' %}
+
+{% block title %}Print Logbook{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+  <p class="right-align">Hi, {{ user.username }}!</p>
+  <h1>Print Logbook Page</h1>
+  <div class="row">
+    <div class="col-lg d-flex align-items-center justify-content-center">
+        <div class="content table-responsive-lg" id="logbookpage">
+            <table class="table table-striped">
+                <tr>
+                    <th>Date</th>
+                    <th>Origin</th>
+                    <th>Destination</th>
+                    <th>Tail Number</th>
+                    <th>Total Time</th>
+                    <th>Landings</th>
+                    <th>PIC</th>
+                    <th>SIC</th>
+                    <th>Multi</th>
+                    <th>Single</th>
+                    <th>VFR</th>
+                    <th>IFR</th>
+                    <th>Night</th>
+                    <th>Notes</th>
+                </tr>
+                {% for flight in data %}
+                <tr>
+                    <td>{{flight.flight_date}}</td>
+                    <td>{{flight.origin}}</td>
+                    <td>{{flight.destination}}</td>
+                    <td>{{flight.tail_number}}</td>
+                    <td>{{flight.total_time}}</td>
+                    <td>{{flight.landings}}</td>
+                    <td>{{flight.pic_time}}</td>
+                    <td>{{flight.sic_time}}</td>
+                    <td>{{flight.multi_engine_time}}</td>
+                    <td>{{flight.single_engine_time}}</td>
+                    <td>{{flight.vfr_time}}</td>
+                    <td>{{flight.ifr_time}}</td>
+                    <td>{{flight.night_time}}</td>
+                    <td>{{flight.notes}}</td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <th>Page Totals:</th>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>{{total_time_subtotal}}</td>
+                    <td>{{landings_subtotal}}</td>
+                    <td>{{pic_time_subtotal}}</td>
+                    <td>{{sic_time_subtotal}}</td>
+                    <td>{{multi_engine_time_subtotal}}</td>
+                    <td>{{single_engine_time_subtotal}}</td>
+                    <td>{{vfr_time_subtotal}}</td>
+                    <td>{{ifr_time_subtotal}}</td>
+                    <td>{{night_time_subtotal}}</td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+        <button onclick="window.print()">Print this page</button>
+        <br>
+        <p style="margin-left: 10px;"><a href = "{% url 'summary' %}" class="link-dark">Cancel and return to Flight Summary</a></p>
+    </div>
+
+
+{% else %}
+<div id="login-needed">
+<p>You are not logged in.</p>
+<p>Please <a href="{% url 'login' %}">Log In</a> or <a href="{% url 'signup' %}">Sign Up</a> to enter flight data.</p>
+</div>
+{% endif %}
+{% endblock %}

@@ -10,18 +10,18 @@ class DateInput(forms.DateInput):
 
 class FlightEntryForm(forms.ModelForm):
     flight_date = forms.DateField(widget=DateInput)
-    origin = forms.CharField(max_length=3, help_text="Enter Origin Airport ID")
+    origin = forms.CharField(max_length=3, help_text="Enter Origin Airport ID", widget=forms.Textarea(attrs={'title':'Enter Origin Airport', 'rows':1, 'cols':10}))
     destination = forms.CharField(max_length=3, help_text="Enter Destination Airport ID")
     tail_number = forms.IntegerField(label="Tail Number: N", min_value=0, max_value=999)
-    total_time = forms.FloatField(help_text="Enter total flight time.", min_value=0)
+    total_time = forms.FloatField(help_text="Enter total flight time.", min_value=0, step_size=.1)
     landings = forms.IntegerField(min_value=0, max_value=1, initial=0)
-    multi_engine_time = forms.FloatField(min_value=0)
-    single_engine_time = forms.FloatField(min_value=0)
-    vfr_time = forms.FloatField(min_value=0, help_text="Enter total VFR time", initial=0)
-    ifr_time = forms.FloatField(min_value=0, help_text="Enter total IFR time", initial=0)
-    night_time = forms.FloatField(min_value=0, help_text="Enter total night time", initial=0)
-    pic_time = forms.FloatField(label="PIC time", min_value= 0, initial=0)
-    sic_time = forms.FloatField(label="SIC time", min_value= 0, initial=0)
+    multi_engine_time = forms.FloatField(min_value=0, step_size=.1)
+    single_engine_time = forms.FloatField(min_value=0, step_size=.1)
+    vfr_time = forms.FloatField(min_value=0, help_text="Enter total VFR time", initial=0, step_size=.1)
+    ifr_time = forms.FloatField(min_value=0, help_text="Enter total IFR time", initial=0, step_size=.1)
+    night_time = forms.FloatField(min_value=0, help_text="Enter total night time", initial=0, step_size=.1)
+    pic_time = forms.FloatField(label="PIC time", min_value= 0, initial=0, step_size=.1)
+    sic_time = forms.FloatField(label="SIC time", min_value= 0, initial=0, step_size=.1)
     notes = forms.CharField(max_length=250, initial="None")
 
     class Meta:

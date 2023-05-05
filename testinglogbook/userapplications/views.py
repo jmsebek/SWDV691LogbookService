@@ -5,6 +5,10 @@ from django.contrib.auth.models import User
 from django.db.models import Sum
 from django.contrib import messages
 from datetime import timedelta, datetime
+from django.core.paginator import Paginator
+#from django.http import HttpResponse
+#from django.template.loader import get_template
+#from xhtml2pdf import pisa
 import json
 
 # Create your views here.
@@ -48,6 +52,8 @@ def FlightEntryView(request):
                 print(flight_form.cleaned_data)
                 obj=flight_form.save(commit=False)
                 obj.pilot=request.user
+                obj.destination = obj.destination.upper()
+                obj.origin = obj.origin.upper()
                 obj.save()
                 messages.success(request, "Flight information saved")
                 flight_form = FlightEntryForm()
@@ -81,6 +87,8 @@ def FlightDetailView(request, id=None):
                 obj.pic_time = obj.total_time
             else:
                 obj.sic_time = obj.total_time
+            obj.destination = obj.destination.upper()
+            obj.origin = obj.origin.upper()
             obj.save()
             
 
@@ -142,12 +150,64 @@ def MedicalDeleteView(request, id):
     }
     return render(request, 'medicaldelete.html', context)
 
+def logbook_print_view(request, number):
+    if request.user.is_authenticated:
+        user = request.user
+        queryset = Flight.objects.filter(pilot = user).order_by('flight_date')
+        paginator = Paginator(queryset, 10)
+        page_number = number
+        page_obj = paginator.get_page(page_number)
+        total_time_subtotal = 0
+        landings_subtotal = 0
+        multi_engine_time_subtotal = 0
+        single_engine_time_subtotal = 0
+        vfr_time_subtotal = 0
+        ifr_time_subtotal = 0
+        night_time_subtotal = 0
+        pic_time_subtotal = 0
+        sic_time_subtotal = 0
+        
+        for flight in page_obj:
+            total_time_subtotal += flight.total_time
+            landings_subtotal += flight.landings
+            multi_engine_time_subtotal += flight.multi_engine_time
+            single_engine_time_subtotal += flight.single_engine_time
+            vfr_time_subtotal += flight.vfr_time
+            ifr_time_subtotal += flight.ifr_time
+            night_time_subtotal += flight.night_time
+            pic_time_subtotal += flight.pic_time
+            sic_time_subtotal += flight.sic_time
+            if flight.notes == "None":
+                flight.notes = ''
+        
+        template_path = 'logbookprint.html'
+        context = {
+            'data' : page_obj,
+            'total_time_subtotal': round(total_time_subtotal,1),
+            'landings_subtotal': landings_subtotal,
+            'multi_engine_time_subtotal': round(multi_engine_time_subtotal,1),
+            'single_engine_time_subtotal': round(single_engine_time_subtotal, 1),
+            'vfr_time_subtotal': round(vfr_time_subtotal,1),
+            'ifr_time_subtotal': round(ifr_time_subtotal,1),
+            'night_time_subtotal': round(night_time_subtotal,1),
+            'pic_time_subtotal': round(pic_time_subtotal, 1),
+            'sic_time_subtotal': round(sic_time_subtotal, 1)
+        }
+        
+    
+    return render(request, 'logbookprint.html', context)
+        
+
 def SummaryView(request):
         
     if request.user.is_authenticated:    
         user = request.user
     
         queryset = Flight.objects.filter(pilot = user).order_by('-flight_date')
+        paginator = Paginator(queryset, 10)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+        print(page_obj.object_list)
         totaltime = Flight.objects.filter(pilot=user).aggregate(Sum('total_time'))['total_time__sum']
         if totaltime == None:
             totaltime = 0
@@ -190,7 +250,7 @@ def SummaryView(request):
             sic_time = round(sic_time, 1)
 
         context={
-            "data" : queryset,
+            "data" : page_obj,
             "total_time" : totaltime,
             "night_time" : night,
             "vfr_time" : vfr,

@@ -17,42 +17,42 @@
   <div class="container">
     <div class="row userhome">
         <div class="col-md">
-          <div class="content">
+          <div class="content centered">
             <p>Total Time: {{ total_time }}</p>
           </div>
         </div>
         <div class="col-md">
-          <div class="content">
+          <div class="content centered">
             <p>Night: {{ night_time }}</p>
           </div>
         </div>
         <div class="col-md">
-          <div class="content">
+          <div class="content centered">
             <p>VFR: {{ vfr_time }}</p>
           </div>
         </div>
         <div class="col-md">
-          <div class="content">
+          <div class="content centered">
             <p>IFR: {{ ifr_time }}</p>
           </div>
         </div>
         <div class="col-md">
-          <div class="content">
+          <div class="content centered">
             <p>Multi: {{ multi_time }}</p>
           </div>
         </div>
         <div class="col-md">
-          <div class="content">
+          <div class="content centered">
             <p>Single: {{ single_time }}</p>
           </div>
         </div>
         <div class="col-md">
-          <div class="content">
+          <div class="content centered">
             <p>PIC: {{ pic_time }}</p>
           </div>
         </div>
         <div class="col-md">
-          <div class="content">
+          <div class="content centered">
             <p>SIC: {{ sic_time }}</p>
           </div>
         </div>
@@ -61,7 +61,6 @@
       <h3>Click on flight date to view detail or update flight information.</h3>
       <div class="content">
         <div class="container">
-          
           {% for flight in data %}
           <div class="row">
             <div class="col-lg"><a href ="{% url 'flightdetail' flight.id %}" class="link-dark">Date: {{flight.flight_date}}</a> </div>
@@ -81,7 +80,29 @@
           {% empty %}
           <p>No flights have been entered yet.</p>
           {% endfor %}
-          
+          <div class="pagination">
+            <span class="step-links">
+                {% if data.has_previous %}
+                    <a href="?page=1" class="link-dark">&laquo; first</a>
+                    <a href="?page={{ data.previous_page_number }}" class="link-dark">previous</a>
+                {% endif %}
+        
+                <span class="current">
+                    Page {{ data.number }} of {{ data.paginator.num_pages }}.
+                </span>
+        
+                {% if data.has_next %}
+                    <a href="?page={{ data.next_page_number }}" class="link-dark">next</a>
+                    <a href="?page={{ data.paginator.num_pages }}" class="link-dark">last &raquo;</a>
+                {% endif %}
+            </span>
+            
+          </div>
+          <div class="float-right">
+            {% if data %}
+              <a href="{% url 'logbookprint' data.number %}" class="btn">Print Page</a>
+            {% endif %}
+          </div>
         </div>
       </div>
     </div>
